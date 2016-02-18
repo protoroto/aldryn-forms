@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.0 (UNRELEASED)
+2.1.0 (2016-02-18)
 ------------------
 * Removed deprecated ``formdata``
 * Renamed ``Email Notification Form`` to ``Form (Advanced)``
