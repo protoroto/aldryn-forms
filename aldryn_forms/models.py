@@ -429,7 +429,7 @@ class ImageUploadFieldPlugin(FileFieldPluginBase):
 class Option(models.Model):
 
     field = models.ForeignKey(FieldPlugin, editable=False)
-    value = models.CharField(_('Value'), max_length=50)
+    value = models.CharField(_('Value'), max_length=100)
     default_value = models.BooleanField(_('Default'), default=False)
 
     def __str__(self):
