@@ -200,13 +200,6 @@ class RadioFieldForm(forms.ModelForm):
         fields = ['label', 'help_text', 'required', 'required_message', 'custom_classes']
 
 
-class CaptchaFieldForm(forms.ModelForm):
-
-    class Meta:
-        # captcha is always required
-        fields = ['label', 'help_text', 'required_message']
-
-
 class MinMaxValueForm(ExtandableErrorForm):
 
     def clean(self):
