@@ -6,13 +6,13 @@ REQUIREMENTS = [
     'django-cms>=3.2',
     'django-emailit',
     'djangocms-text-ckeditor',
-    'django-simple-captcha',
     'django-tablib',
     'tablib',
     'pillow',
     'django-filer',
     'django-sizefield',
     'aldryn-boilerplates>=0.6',
+    'django-recaptcha==1.3.1',
 ]
 
 CLASSIFIERS = [

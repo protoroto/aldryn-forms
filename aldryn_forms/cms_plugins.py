@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from PIL import Image
 
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptcha
 from django import forms
+from django.conf import settings
 from django.db.models import query
 from django.contrib import messages
 from django.contrib.admin import TabularInline
@@ -30,7 +33,6 @@ from .forms import (
     BooleanFieldForm,
     MultipleSelectFieldForm,
     SelectFieldForm,
-    CaptchaFieldForm,
     RadioFieldForm,
     FileFieldForm,
     ImageFieldForm,
@@ -768,30 +770,34 @@ class RadioSelectField(Field):
         return kwargs
 
 
-try:
-    from captcha.fields import CaptchaField, CaptchaTextInput
-except ImportError:
-    pass
-else:
-    # Don't like doing this. But we shouldn't force captcha.
-    class CaptchaField(Field):
-        name = _('Captcha Field')
-        form = CaptchaFieldForm
-        form_field = CaptchaField
-        form_field_widget = CaptchaTextInput
-        form_field_enabled_options = ['label', 'error_messages']
-        fieldset_general_fields = [
-            'label',
-        ]
-        fieldset_advanced_fields = [
-            'required_message',
-        ]
+class ReCaptchaField(Field):
+    name = _("Google ReCaptchaV2 Field")
+    render_template = True
+    allow_children = False
+    form_field = ReCaptchaField
+    form_field_widget = ReCaptcha
 
-        def serialize_field(self, *args, **kwargs):
-            # None means don't serialize me
-            return None
+    form_field_enabled_options = [
+        'error_messages',
+    ]
+    fieldset_general_fields = [
+        'label', 'required',
+    ]
+    fieldset_advanced_fields = [
+        'custom_classes',
+    ]
+    form_field_enabled_options = [
+        'label',
+    ]
 
-    plugin_pool.register_plugin(CaptchaField)
+    def get_form_field_widget_kwargs(self, instance):
+        return {'public_key': getattr(settings, 'RECAPTCHA_PUBLIC_KEY', '')}
+
+    def serialize_field(self, *args, **kwargs):
+        return None
+
+    def get_error_messages(self, instance):
+        return {'required': "There was a problem with ReCaptcha V2. Please contact support if this problem persists."}
 
 
 class SubmitButton(FormElement):
@@ -812,3 +818,4 @@ plugin_pool.register_plugin(SelectField)
 plugin_pool.register_plugin(SubmitButton)
 plugin_pool.register_plugin(TextAreaField)
 plugin_pool.register_plugin(TextField)
+plugin_pool.register_plugin(ReCaptchaField)
